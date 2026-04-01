@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>State & Space — Fizică Cuantică</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>State <span class="amp">&amp;</span> Space</h1>
+    <nav>
+      <button class="tab-btn active" data-tab="qubit">Simulatorul de Qubit</button>
+      <button class="tab-btn" data-tab="schrodinger">Cutia lui Schrödinger</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Tab 1: Qubit Simulator -->
+    <section id="tab-qubit" class="tab-content active">
+      <div class="qubit-layout">
+        <div class="bloch-container">
+          <canvas id="bloch-canvas" width="420" height="420"></canvas>
+          <div class="state-readout">
+            <p id="state-label">|ψ⟩ = 1.00|0⟩ + 0.00|1⟩</p>
+            <p id="prob-label">P(|0⟩) = 100% &nbsp; P(|1⟩) = 0%</p>
+          </div>
+        </div>
+        <div class="gates-panel">
+          <h2>Porți Cuantice</h2>
+          <button class="gate-btn" data-gate="H">
+            <span class="gate-letter">H</span>
+            <span class="gate-name">Hadamard</span>
+          </button>
+          <button class="gate-btn" data-gate="X">
+            <span class="gate-letter">X</span>
+            <span class="gate-name">NOT (Pauli-X)</span>
+          </button>
+          <button class="gate-btn" data-gate="Z">
+            <span class="gate-letter">Z</span>
+            <span class="gate-name">Inversare de fază</span>
+          </button>
+          <button class="gate-btn" data-gate="Y">
+            <span class="gate-letter">Y</span>
+            <span class="gate-name">Pauli-Y</span>
+          </button>
+          <button class="gate-btn" data-gate="S">
+            <span class="gate-letter">S</span>
+            <span class="gate-name">Fază π/2</span>
+          </button>
+          <button class="gate-btn" data-gate="T">
+            <span class="gate-letter">T</span>
+            <span class="gate-name">Fază π/4</span>
+          </button>
+          <div class="gate-separator"></div>
+          <button class="gate-btn reset-btn" data-gate="RESET">
+            <span class="gate-letter">⟲</span>
+            <span class="gate-name">Resetare la |0⟩</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Schrödinger's Box -->
+    <section id="tab-schrodinger" class="tab-content">
+      <div class="schrodinger-layout">
+        <div class="box-container">
+          <canvas id="schrodinger-canvas" width="500" height="400"></canvas>
+        </div>
+        <div class="schrodinger-controls">
+          <div class="prob-display">
+            <div class="prob-bar">
+              <div class="prob-fill-circle" id="prob-circle-fill"></div>
+              <div class="prob-fill-square" id="prob-square-fill"></div>
+            </div>
+            <div class="prob-labels">
+              <span id="prob-a">● Cerc: 50%</span>
+              <span id="prob-b">■ Pătrat: 50%</span>
+            </div>
+          </div>
+          <div class="slider-group">
+            <label for="time-slider">Timp scurs</label>
+            <input type="range" id="time-slider" min="0" max="100" value="50">
+            <span id="time-value">50%</span>
+          </div>
+          <button id="observe-btn">OBSERVĂ</button>
+          <p id="result-text" class="result-text"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.2.1/math.min.js"></script>
+  <script src="quantum.js"></script>
+  <script src="bloch.js"></script>
+  <script src="schrodinger.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

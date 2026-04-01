@@ -1,0 +1,391 @@
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --border: #1e1e2e;
+  --text: #e0e0e8;
+  --text-dim: #6a6a80;
+  --accent: #6c63ff;
+  --accent-glow: rgba(108, 99, 255, 0.3);
+  --danger: #ff4d6a;
+  --success: #4dff91;
+  --circle-color: #6c63ff;
+  --square-color: #ff6c63;
+}
+
+body {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Header ── */
+header {
+  text-align: center;
+  padding: 2rem 1rem 0;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+header .amp {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.8rem 2rem;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: color 0.3s, border-color 0.3s;
+  border-bottom: 2px solid transparent;
+  position: relative;
+  top: 1px;
+}
+
+.tab-btn:hover {
+  color: var(--text);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Tab Content ── */
+.tab-content {
+  display: none;
+  padding: 2rem 1rem;
+  max-width: 960px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Tab 1: Qubit Simulator ── */
+.qubit-layout {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.bloch-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#bloch-canvas {
+  border-radius: 12px;
+}
+
+.state-readout {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.state-readout p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 0.3rem 0;
+}
+
+#state-label {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+/* Gates Panel */
+.gates-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 200px;
+}
+
+.gates-panel h2 {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.gate-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.gate-btn:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+  transform: translateX(4px);
+}
+
+.gate-btn:active {
+  transform: translateX(2px) scale(0.98);
+}
+
+.gate-letter {
+  font-size: 1.4rem;
+  font-weight: 700;
+  width: 2rem;
+  text-align: center;
+  color: var(--accent);
+}
+
+.gate-name {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.gate-separator {
+  height: 1px;
+  background: var(--border);
+  margin: 0.3rem 0;
+}
+
+.reset-btn .gate-letter {
+  color: var(--danger);
+}
+
+.reset-btn:hover {
+  border-color: var(--danger);
+  box-shadow: 0 0 12px rgba(255, 77, 106, 0.3);
+}
+
+/* ── Tab 2: Schrödinger ── */
+.schrodinger-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.box-container {
+  position: relative;
+}
+
+#schrodinger-canvas {
+  border-radius: 12px;
+}
+
+.schrodinger-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Probability display */
+.prob-display {
+  width: 100%;
+}
+
+.prob-bar {
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--surface);
+  margin-bottom: 0.5rem;
+}
+
+.prob-fill-circle {
+  background: var(--circle-color);
+  width: 50%;
+  transition: width 0.3s ease;
+}
+
+.prob-fill-square {
+  background: var(--square-color);
+  width: 50%;
+  transition: width 0.3s ease;
+}
+
+.prob-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+#prob-a { color: var(--circle-color); }
+#prob-b { color: var(--square-color); }
+
+/* Slider */
+.slider-group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.slider-group label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+#time-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+#time-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+#time-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+#time-value {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  min-width: 3em;
+  text-align: right;
+}
+
+/* Observe button */
+#observe-btn {
+  width: 100%;
+  padding: 1.2rem;
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--text);
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+
+#observe-btn:hover {
+  background: var(--accent);
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+
+#observe-btn:active {
+  transform: scale(0.97);
+}
+
+#observe-btn.collapsed {
+  pointer-events: none;
+  border-color: var(--text-dim);
+  background: var(--surface);
+  color: var(--text-dim);
+}
+
+.result-text {
+  font-size: 1rem;
+  min-height: 1.5em;
+  color: var(--text);
+  text-align: center;
+  transition: opacity 0.3s;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .qubit-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #bloch-canvas {
+    width: 320px;
+    height: 320px;
+  }
+
+  .gates-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-width: unset;
+  }
+
+  .gates-panel h2 {
+    width: 100%;
+    text-align: center;
+  }
+
+  .gate-separator {
+    display: none;
+  }
+
+  .gate-btn {
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  header h1 {
+    font-size: 1.3rem;
+  }
+}
