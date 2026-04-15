@@ -36,23 +36,76 @@ BITS_EXPLANATION = (
 )
 
 QUBITS_EXPLANATION = (
-    "Quantum bit (qubit): instead of being forced to 0 or 1, a qubit lives "
-    "in a superposition a|0> + b|1>, where |a|^2 and |b|^2 are the "
-    "probabilities of measuring 0 or 1. Until you measure it, it is BOTH "
-    "values at once - weighted by those amplitudes. A register of N qubits "
-    "does not store one N-bit number; it simultaneously represents every "
-    "one of the 2^N possible values, each with its own probability. When "
-    "you finally measure the register, the superposition collapses to "
-    "exactly one of those basis states at random, weighted by probability. "
-    "Slide the |1> probability for each qubit below and watch how the 2^N "
-    "joint probabilities change in the bar chart. That chart is what the "
-    "qubits are 'holding' before measurement."
+    "Quantum bit (qubit) — the fundamental unit of a quantum computer.\n\n"
+    "A qubit is described by a quantum state written in Dirac (bra-ket) notation as:\n"
+    "    |ψ⟩  =  α|0⟩  +  β|1⟩\n\n"
+    "α and β are called probability amplitudes. They are complex numbers whose "
+    "squares give probabilities:\n"
+    "    P(measuring 0)  =  |α|²\n"
+    "    P(measuring 1)  =  |β|²\n"
+    "    |α|² + |β|² = 1  (probabilities must sum to 1)\n\n"
+    "The key insight: before you measure the qubit, it is not secretly hiding "
+    "a definite value — it genuinely holds BOTH |0⟩ and |1⟩ at the same time. "
+    "This is called superposition. The amplitudes tell you how 'much' of each "
+    "the qubit is. For example, if α = β = 1/√2, the qubit is exactly half in "
+    "|0⟩ and half in |1⟩ with a 50% chance of landing on either outcome when "
+    "measured. This is called an equal superposition and is what the "
+    "'Hadamard all' button sets."
+)
+
+QUBITS_REGISTER_EXPLANATION = (
+    "A register of N qubits:\n\n"
+    "A single qubit holds two states simultaneously. Two qubits together hold "
+    "four (|00⟩, |01⟩, |10⟩, |11⟩). Three qubits hold eight. In general, N "
+    "qubits hold 2^N basis states at the same time — each with its own "
+    "probability amplitude. The whole register is in a superposition of all "
+    "2^N possibilities at once. A classical N-bit register can only ever hold "
+    "exactly ONE of those states at a time.\n\n"
+    "This is the raw power behind quantum algorithms: a quantum computer can "
+    "process all 2^N inputs in a single pass. For 300 qubits that is more "
+    "states than there are atoms in the observable universe."
+)
+
+QUBITS_MEASUREMENT_EXPLANATION = (
+    "Wave function collapse:\n\n"
+    "Measurement is irreversible. The moment you measure the qubit the "
+    "superposition collapses to one definite outcome — |0⟩ or |1⟩ — chosen "
+    "at random, weighted by the probabilities. After collapse the qubit is "
+    "just a classical bit; the superposition is gone. This is why quantum "
+    "computers must be carefully designed to extract useful answers before "
+    "measurement destroys the quantum state."
 )
 
 DIFFERENCE_NOTE = (
-    "Main difference: 3 classical bits store exactly one of 8 values. 3 "
-    "qubits hold all 8 values at once, each with its own probability, and "
-    "only pick one when you measure them."
+    "The key difference: 3 classical bits store exactly one of 8 values at a time. "
+    "3 qubits exist in a superposition of all 8 values simultaneously, each with its "
+    "own probability — and only 'pick' a single value the moment you measure them. "
+    "That collapse is instantaneous, irreversible, and truly random."
+)
+
+SIMULATION_EXPLANATION = (
+    "How this simulation works:\n\n"
+    "This simulator represents independent (unentangled) qubits. In a real quantum "
+    "computer qubits can be entangled — their states become correlated in ways that "
+    "have no classical equivalent. For simplicity, each qubit here is independent.\n\n"
+    "Slider: sets P(|1⟩) for that qubit directly. In a real qubit this corresponds "
+    "to rotating the state vector on the Bloch sphere — a unit sphere where the "
+    "north pole is |0⟩ and the south pole is |1⟩. The slice of blue vs. purple "
+    "in the circle icon shows your current split.\n\n"
+    "Bar chart: shows the joint probability of every possible 3-bit outcome "
+    "(|000⟩ through |111⟩). Because the qubits are independent, each joint "
+    "probability is simply the product of the individual ones:\n"
+    "    P(|q2 q1 q0⟩) = P(q2) × P(q1) × P(q0)\n"
+    "All 8 bars always sum to 100%. The chart visualises what the register is "
+    "'holding' right now — before collapse.\n\n"
+    "Hadamard button: puts every qubit into a perfect 50/50 superposition "
+    "(equal superposition). In a real quantum circuit this is done with a "
+    "Hadamard gate — a single-qubit operation that maps |0⟩ → (|0⟩+|1⟩)/√2.\n\n"
+    "Measure button: collapses the entire register. The simulator picks a "
+    "random outcome weighted by the joint probabilities shown in the chart, "
+    "then snaps each qubit's slider to its measured value (0% or 100%). "
+    "Notice that after collapse the bar chart has a single 100% bar — just "
+    "like a classical register."
 )
 
 
@@ -211,10 +264,25 @@ class BitsTab(ttk.Frame):
 
         ttk.Label(wrap, text="Quantum Bits (Qubits)",
                   style="PanelTitle.TLabel").pack(anchor="w")
-        ttk.Label(
-            wrap, text=QUBITS_EXPLANATION, style="Panel.TLabel",
-            wraplength=1020, justify="left",
-        ).pack(anchor="w", pady=(4, 8))
+
+        # Three-column explanation row
+        exp_row = ttk.Frame(wrap, style="Panel.TFrame")
+        exp_row.pack(fill="x", pady=(6, 12))
+
+        for col, (heading, body) in enumerate([
+            ("What is a qubit?",         QUBITS_EXPLANATION),
+            ("Multi-qubit registers",    QUBITS_REGISTER_EXPLANATION),
+            ("Wave function collapse",   QUBITS_MEASUREMENT_EXPLANATION),
+        ]):
+            cell = ttk.Frame(exp_row, style="Panel.TFrame",
+                             padding=(0, 0, 20, 0))
+            cell.grid(row=0, column=col, sticky="nw", padx=(0, 12))
+            exp_row.columnconfigure(col, weight=1)
+            ttk.Label(cell, text=heading, style="Panel.TLabel",
+                      font=("Segoe UI", 10, "bold")).pack(anchor="w")
+            ttk.Label(cell, text=body, style="Panel.TLabel",
+                      wraplength=320, justify="left").pack(anchor="w", pady=(4, 0))
+
         ttk.Label(
             wrap, text=DIFFERENCE_NOTE, style="Panel.TLabel",
             wraplength=1020, justify="left",
@@ -287,6 +355,17 @@ class BitsTab(ttk.Frame):
         ttk.Label(right, textvariable=self._measured_var,
                   style="Panel.TLabel",
                   font=("Consolas", 12, "bold")).pack(anchor="w")
+
+        # Simulation mechanics panel
+        sim_panel = ttk.Frame(wrap, style="Panel.TFrame", padding=(0, 14, 0, 0))
+        sim_panel.pack(fill="x")
+        ttk.Separator(sim_panel, orient="horizontal").pack(fill="x", pady=(0, 12))
+        ttk.Label(sim_panel, text="How this simulation works",
+                  style="Panel.TLabel",
+                  font=("Segoe UI", 11, "bold")).pack(anchor="w")
+        ttk.Label(sim_panel, text=SIMULATION_EXPLANATION,
+                  style="Panel.TLabel",
+                  wraplength=1020, justify="left").pack(anchor="w", pady=(4, 0))
 
     def _qubit_slider(self, k):
         self._qubit_p1[k] = float(self._qubit_vars[k].get()) / 100.0
